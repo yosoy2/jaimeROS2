@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <xacro:include filename="inertial_macros.xacro"/>
+
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+
+    <material name="orange">
+        <color rgba="1 0.3 0.1 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <!-- BASE LINK -->
+
+    <link name="base_footprint">
+
+    </link>
+
+
+    <!-- CHASSIS LINK -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!--link name="base_link">
+        <visual>
+            <geometry>
+                <mesh filename="file:///home/michela/dev_ws/src/articubot_one/meshes/kobuki_base.stl" scale="0.01 0.01 0.01"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 ${pi/2}"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.055" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.175" length="0.083"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="0.5" x="0.3" y="0.3" z="0.15">
+            <origin xyz="0.15 0 0.075" rpy="0 ${pi/2} 0"/>
+        </xacro:inertial_box>
+    </link-->
+
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <!-- new mesh -->
+          <!--mesh filename="file://$(find articubot_one)/meshes/microwave.stl" scale="0.01 0.01 0.01"/-->
+          <mesh filename="file://$(find jaime_vs)/meshes/kobuki_base.stl" scale="0.01 0.01 0.01"/>
+          <!--mesh filename="package://install/package_name/share/package_name/meshes/kobuki_base.stl" scale="0.01 0.01 0.01"/-->
+          <!--cylinder radius="0.015" length="0.0206"/-->
+        </geometry>
+        <material name="black"/>
+        <origin xyz="0.0 0 -0.055" rpy="${pi/2} 0 ${pi/2}"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder length="0.10938" radius="0.178"/>
+        </geometry>
+        <origin xyz="0.0 0 0.0" rpy="0 0 0"/>
+      </collision>
+      <inertial>
+        <!-- COM experimentally determined -->
+        <origin xyz="0.01 0 0"/>
+        <mass value="2.4"/> <!-- 2.4/2.6 kg for small/big battery pack -->
+        <!-- Kobuki's inertia tensor is approximated by a cylinder with homogeneous mass distribution
+             More details: http://en.wikipedia.org/wiki/List_of_moment_of_inertia_tensors
+             m = 2.4 kg; h = 0.09 m; r = 0.175 m
+             ixx = 1/12 * m * (3 * r^2 + h^2)
+             iyy = 1/12 * m * (3 * r^2 + h^2)
+             izz = 1/2 * m * r^2
+          -->
+        <inertia ixx="0.019995" ixy="0.0" ixz="0.0"
+                 iyy="0.019995" iyz="0.0"
+                 izz="0.03675" />
+      </inertial>
+    </link>
+
+    <gazebo reference="base_link">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <!-- LEFT WHEEL LINK -->
+
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_footprint"/>
+        <child link="left_wheel"/>
+        <origin xyz="0 0.115 -0.025" rpy="-${pi/2} 0 0" />
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="left_wheel">
+        <visual>
+            <geometry>
+                <!--mesh filename="file:///home/michela/dev_ws/src/articubot_one/meshes/wheel.dae" scale="0.01 0.01 0.01"/-->
+                <cylinder radius="0.035" length="0.0206"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.035" length="0.0206"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="0.0352" radius="0.0206">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <gazebo reference="left_wheel">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+
+
+
+    <!-- RIGHT WHEEL LINK -->
+
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_footprint"/>
+        <child link="right_wheel"/>
+        <origin xyz="0 -0.115 -0.025" rpy="${pi/2} 0 0" />
+        <axis xyz="0 0 -1"/>
+    </joint>
+
+    <link name="right_wheel">
+        <visual>
+            <geometry>
+                <!--mesh filename="file:///home/michela/dev_ws/src/articubot_one/meshes/wheel.dae" scale="0.01 0.01 0.01"/-->
+                <cylinder radius="0.035" length="0.0206"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.035" length="0.0206"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="0.0206" radius="0.0352">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <gazebo reference="right_wheel">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+
+    <!-- CASTER WHEEL LINK -->
+
+    <!--joint name="caster_wheel_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="caster_wheel"/>
+        <origin xyz="0.24 0 0"/>
+    </joint-->
+
+
+    <!--link name="caster_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="0.005"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="0.05"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_sphere mass="0.1" radius="0.005">
+            <origin xyz="0 0 -0.05/2" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
+    </link-->
+
+    <!-- uso del lidar -->
+
+    <link name="laser">
+      <visual>
+        <origin xyz="0 0 0.003"/>
+        <geometry>
+          <box size="0.079 0.05 0.006"/>
+        </geometry>
+    <material name="support">
+      <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
+  </visual>
+  <visual>
+    <origin xyz="0 0 0.041"/>
+    <geometry>
+      <box size="0.05 0.05 0.07"/>
+    </geometry>
+    <material name="lidar">
+      <color rgba="1.0 0.0 0.0 0.7"/>
+    </material>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0.003"/>
+    <geometry>
+      <box size="0.079 0.05 0.006"/>
+    </geometry>
+  </collision>
+  <collision>
+    <origin xyz="0 0 0.041"/>
+    <geometry>
+      <box size="0.05 0.05 0.07"/>
+    </geometry>
+  </collision>
+</link>
+
+  <joint name="hokuyo_joint" type="fixed">
+    <origin xyz="0.0775 0 0"/>
+    <parent link="base_link"/>
+    <child link="laser"/>
+  </joint>
+
+  <link name="laser_frame"/>
+
+  <joint name="laser_joint" type="fixed">
+    <origin xyz="0 0 0.064"/>
+    <parent link="laser"/>
+    <child link="laser_frame"/>
+  </joint>
+
+<!-- uso del lidar -->
+
+  <!-- Kobuki's sensors -->
+  <joint name="gyro_joint" type="fixed">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.056 0.062 0.0202" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="gyro_link"/>
+  </joint>
+
+
+  <link name="gyro_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0"
+              iyy="0.000001" iyz="0"
+              izz="0.0001"/>
+      </inertial>
+    </link>
+
+    <gazebo reference="caster_wheel">
+        <material>Gazebo/Black</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
+    </gazebo>
+
+</robot>
