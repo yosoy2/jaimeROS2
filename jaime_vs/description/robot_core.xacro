@@ -98,7 +98,7 @@
         <parent link="base_footprint"/>
         <child link="left_wheel"/>
         <origin xyz="0 0.115 -0.025" rpy="-${pi/2} 0 0" />
-        <axis xyz="1 0 0"/>
+        <axis xyz="0 0 1"/>
     </joint>
 
     <link name="left_wheel">
@@ -114,8 +114,8 @@
                 <cylinder radius="0.035" length="0.0206"/>
             </geometry>
         </collision>
-        <xacro:inertial_cylinder mass="0.1" length="0.0352" radius="0.0206">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+        <xacro:inertial_cylinder mass="0.1" length="0.0206" radius="0.035">
+            <origin xyz="0 0.115 -0.025" rpy="-${pi/2} 0 0"/>
         </xacro:inertial_cylinder>
     </link>
 
@@ -148,8 +148,8 @@
                 <cylinder radius="0.035" length="0.0206"/>
             </geometry>
         </collision>
-        <xacro:inertial_cylinder mass="0.1" length="0.0206" radius="0.0352">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+        <xacro:inertial_cylinder mass="0.1" length="0.0206" radius="0.035">
+            <origin xyz="0 -0.115 -0.025" rpy="${pi/2} 0 0"/>
         </xacro:inertial_cylinder>
     </link>
 
