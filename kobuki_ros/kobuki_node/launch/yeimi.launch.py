@@ -1,16 +1,12 @@
 
+
+import os
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition, UnlessCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import Command, LaunchConfiguration, PythonExpression
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
-    ld = LaunchDescription()
-    base_launch = Node(
-        package="demo_nodes_cpp",
-        executable="talker",
-    )
-    listener_node = Node(
-        package="demo_nodes_py",
-        executable="listener"
-    )
-    ld.add_action(talker_node)
-    ld.add_action(listener_node)
-    return ld
